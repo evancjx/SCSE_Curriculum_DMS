@@ -1,0 +1,116 @@
+// Fonts
+@import url('https://fonts.googleapis.com/css?family=Nunito');
+
+// Variables
+@import 'variables';
+
+// Bootstrap
+@import '~bootstrap/scss/bootstrap';
+td, th{
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    padding: 5px;
+}
+table a{
+    color: inherit;
+}
+label{
+    margin: 0;
+    display: contents;
+}
+span::after{
+    width: 100px;
+}
+.pageBreak{
+    page-break-before: always;
+}
+@media print {
+    .landscape{
+        transform-origin: 0 0;
+        transform: translate(0, 1450px)  rotate(-90deg);
+        margin-top: 100px;
+        height: 500px;
+        width: 1600px;
+    }
+}
+.vertical-table{
+    width: 880px;
+}
+div#submit{
+    top:0;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-bottom: 1px solid black;
+    width: inherit;
+    height: 60px;
+    position: sticky;
+    padding:5px;
+}
+table textarea{
+    height: 60px;
+    max-height: inherit;
+    min-height: 30px !important;
+    width: 100%;
+    display: block;
+}
+#contents .description{
+    min-height: 120px !important;
+}
+table input[type=button], table input[type=text]{
+    width: 100%;
+}
+.vertical-table #course_aims{
+    height: 100px;
+}
+.horizontal-table{
+    width: 1400px;
+}
+#assessment textarea{
+    height: 100px;
+}
+.label{
+    min-width: 140px;
+    max-width: 150px;
+}
+.details{
+    width: 500px;
+}
+.ch-label{
+    width: 170px;
+    max-width: 200px;
+}
+.ch-details{
+    width: 80px;
+    max-width: 80px;
+}
+.action{
+    width: 35px;
+    min-width: 35px;
+}
+.mini-col{
+    width: 30px;
+    max-width: 30px;
+}
+.short-col{
+    width: 50px;
+    max-width: 50px;
+}
+.mid-col{
+    width: 100px;
+    max-width: 100px;
+}
+.med-col{
+    width: 200px;
+    max-width: 200px;
+}
+.long-col{
+    width: 300px;
+    max-width: 300px;
+}
+#curriculumList .mid-col{
+    width: 110px;
+    max-width: 110px;
+}
+#mappingGradAttr .long-col{
+    width: 230px;
+    max-width: 230px;
+}

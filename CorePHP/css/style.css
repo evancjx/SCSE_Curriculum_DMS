@@ -1,0 +1,496 @@
+body {
+  background-color: #fff;
+  /* color: #636b6f; */
+  font-family: Arial, sans-serif;
+  /* font-size: 0.8em; */
+  font-weight: 200;
+  /* height: 100vh; */
+  margin: 0;
+}
+a{
+  text-decoration: none;
+  color: black;
+}
+h1 {
+  color: maroon;
+  margin-left: 40px;
+}
+table {
+  margin-top: 30px;
+  margin-left:auto;
+  margin-right:auto;
+  border-collapse: collapse;
+  border-spacing: none;
+  /* page-break-inside: avoid; */
+}
+tr{
+  /* page-break-inside: avoid;
+  page-break-after: auto; */
+}
+td, .form{
+  border: solid 1px black;
+  padding: 5px
+}
+td input[type=text]{
+  width: 100%;
+}
+td input[type=button]{
+  border: none;
+}
+td input[type=checkbox]{
+  width: 20px;
+}
+input[type=submit]{
+  width: 100px;
+  padding: 5px;
+}
+#links{
+  top: 0;
+  /* position: sticky; */
+}
+#link{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+#link li{
+  display: inline-block;
+  width: 20%;
+  background-color: #000;
+  color: #FFF;
+  padding: 3px 0px;
+}
+#link a{
+  color: #FFF;
+  text-decoration: none;
+}
+#link li:hover {
+  display: inline-block;
+  background-color: #555;
+  color: white;
+}
+@media screen and (min-width:540px) and (max-width:500px){
+  #submit{
+    position: fixed;
+    top:95%;
+    left:10%;
+  }
+}
+#form{
+  width: 540px;
+  margin: auto;
+  padding: 10px;
+}
+#form button[type=submit]{
+  margin: 5px 0;
+}
+div#submit{
+  top:0;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-bottom: 1px solid black;
+  width: inherit;
+  height: 60px;
+  position: sticky;
+  padding:5px;
+}
+#submit button{
+  float:right;
+  padding:10px
+}
+.submit{
+  border: none;
+}
+#container{
+  margin: auto;
+  width: 1000px;
+}
+#import{
+  width: 520px;
+}
+.content, .container {
+  margin: auto;
+  width: 700px;
+}
+.pagebreak{
+  page-break-before: always;
+}
+@media print {
+  .landscape{
+    transform-origin: 0 0;
+    transform: translate(0, 1000px)  rotate(-90deg);
+    height: 800px;
+  }
+}
+#header, #greeting{
+  width: 520px;
+  margin: auto;
+  margin-top: 30px;
+}
+#curriculumList{
+  margin-top: 0px;
+}
+#curriculum{
+  width: 1000px;
+  margin-top: 65px;
+}
+.links{
+  float:
+}
+.links > a{
+  color: #636b6f;
+  padding: 0 25px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .1rem;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+.courseHeader{
+   width: 400px;
+}
+.tuple{
+  width: 400px;
+  border: 1px solid black;
+}
+.tuple > a:link, a:visited, a:hover, a:active{
+  color: black;
+  text-decoration: underline;
+}
+.AUcol{
+  width: 50px;
+}
+.Delcol{
+  width: 50px;
+}
+.Delcol > button{
+  padding: 0;
+}
+/* Insert/Update Curriculum Page */
+.table{
+  width: 750px;
+  font-size: 0.8em;
+}
+/* View Page */
+.content > .table{
+  width: 680px;
+}
+.header{
+  border: none;
+  padding-left: 10px;
+  padding-bottom: 20px;
+  font-weight: bold;
+  font-size: 1em;
+  width: 500px;
+}
+.details{
+  width:500px;
+}
+.label{
+  /* max-width: 70px; */
+  max-width: 85px;
+  font-weight: bold;
+}
+.chlabel{
+  /* min-width: 50px; */
+  min-width: 45px;
+  max-width: 60px;
+  color: red;
+}
+.input, .chshow{
+  /* min-width: 30px; */
+  min-width: 20px;
+  max-width: 50px;
+  color:red;
+}
+.input > input[type=text]{
+  width: 50px;
+}
+.aim > textarea[type=text]{
+  height: 100px;
+  width: 99%;
+}
+.iLO > textarea[type=text]{
+  height: 30px;
+  width: 99%;
+}
+.sltch{
+  width: 90px;
+}
+.subtable{
+  width: 100%;
+  margin-top: 5px;
+}
+.bl{
+  border: 0;
+}
+.action{
+  width: 35px;
+  min-width: 35px;
+}
+.bbl{
+  border-bottom: 0;
+}
+.btl{
+  border-top: 0;
+}
+.bll{
+  border-left: 0;
+}
+.brl{
+  border-right: 0;
+}
+.tbt{
+  border-top: 10px solid grey;
+}
+.att1, .att2{
+  width: 120px;
+  text-align: center;
+}
+.att2 > label{
+  font-weight: bold;
+  font-size: 0.8em;
+}
+.att1 > textarea[type=text], .att2 > textarea[type=text]{
+  width: 95%;
+  height: 45px;
+  /* border: 1px black solid; */
+}
+.des > textarea[type=text]{
+  width: 98%;
+  height: 45px;
+  /* border: 1px black solid; */
+}
+.short{
+  width: 10px;
+}
+.sn > input[type=text]{
+  /* border: 1px black solid; */
+}
+#tblSubmit{
+  height: 200px;
+}
+#tblSubmit button{
+  padding: 8px;
+}
+#tblObjectives, #tblContent, #tblAssessment, #tblMapGraduateAttributes{
+  width: 1000px;
+}
+#assessment textarea[type=text]{
+  height: 150px;
+  width: 99%;
+}
+#assessment input[type=radio]{
+  width: 20px;
+}
+.cbGradAttr{
+  /* padding: 5px; */
+}
+.cbGradAttrLbl{
+  padding-right: 5px;
+}
+.longCol{
+  width: 230px;
+}
+.medCol{
+  width: 200px;
+  max-width: 200px;
+}
+.midCol{
+  width: 155px;
+  max-width: 160px;
+}
+.shortCol{
+  width: 50px;
+}
+#assessment .rubics{
+  width: 100px;
+  max-width: 100px;
+}
+#assessment .testedLOCol, #MapGraduateAttributes .catCol{
+  max-width: 30px;
+  width: 30px;
+}
+#MapGraduateAttributes .reqCol{
+  min-width: 75px;
+}
+#MapGraduateAttributes .shortCol{
+  min-width: 50px;
+  padding: 0;
+  text-align: center;
+}
+#assessment .weightageCol{
+  max-width: 45px;
+  width: 30px;
+}
+#assessment .assessmentWeightageInput{
+  width: 99%;
+  height: 30px;
+  font-size: 0.9em;
+  /* border:1px solid black; */
+}
+#assessment .gradAttrInfo, #MapGraduateAttributes .gradAttrInfo{
+  color: Blue;
+}
+#tblGraduateAttributes{
+  width: 1000px;
+}
+#MapGraduateAttributes input{
+  text-align: right;
+  width: 23px;
+  border: none;
+}
+#formativeFeedback{
+  width: 99%;
+  height: 150px;
+}
+#LearningAndTeachingApproach textarea, #ReadingAndReferences textarea, #Appendix textarea{
+  width: 99%;
+  height: 50px;
+}
+#ReadingAndReferences{
+  padding-left: 20px;
+}
+#PlannedWeeklySchedule input{
+  text-align: center;
+}
+#PlannedWeeklySchedule textarea{
+  height: 70px;
+}
+.appendixRow{
+  margin-top: 20px;
+}
+#Appendix .appendixHeader{
+  width: 100%;
+}
+#Appendix .criteriaTable{
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+#Appendix .criteriaTable textarea{
+  width: 97.5%;
+  height: 60px;
+}
+#Appendix table{
+  width: 100%;
+}
+#tblAppendix .Header{
+  font-weight: bold;
+}
+#tblAppendix .appendix td{
+  border: 0;
+}
+#tblAppendix tr .description td{
+  margin-bottom: 20px;
+}
+#tblAppendix .tbt{
+  margin-bottom: 20px;
+}
+#tblAppendix .criteriaTable{
+  margin-top: 0px;
+  margin-bottom: 30px;
+}
+.criteriaTable .criteriaHeader{
+  width: 160px;
+}
+.calculation{
+  text-align: right;
+}
+#searchForm{
+  width: 100%;
+  margin: auto;
+}
+#searchTable{
+  width: 600px;
+}
+#searchTable .title{
+  /* float: left; */
+  margin-right: 20px;
+}
+.search > .firstColumn{
+  min-width: 230px;
+  max-width: 250px;
+}
+.search > .secondColumn{
+  min-width: 360px;
+  max-width: 400px;
+}
+.search > .secondColumn label{
+  float: left;
+}
+.secondColumn input{
+  float :right;
+}
+#searchTable input[type=text]{
+  width: 200px;
+}
+#searchTable #searchCode{
+  width: 100px;
+  float: right;
+}
+#searchContactType ul{
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-left: 0;
+  padding-right: 20px;
+  list-style: none;
+  float: right;
+}
+#searchContactHours span{
+  /* float: left; */
+}
+#searchContactHours table{
+  margin-top: 0;
+  float: left;
+}
+#searchContactHours td{
+  border: 0;
+  padding: 0;
+  padding-left: 5px;
+}
+
+#searchCosGradAttr table{
+  margin-top: 0;
+  float: left;
+}
+#searchCosGradAttr td{
+  border: 0;
+  padding: 0;
+  padding-left: 5px;
+}
+#searchCosGradAttr input[type=text]{
+  width: 100px;
+}
+
+#result{
+  margin-top: 20px;
+  border-top: 2px solid #000;
+}
+#result .resultTbl{
+  width: 600px;
+}
+#resultTbl .courseHeader{
+  border-bottom: 0;
+}
+#resultTbl .resultInnerTbl{
+  margin-top: 0;
+  float: left;
+}
+#resultTbl .resultInnerTbl td{
+  border: 0;
+}
+#resultTbl th{
+  font-weight: normal;
+}
+#resultTbl .longCol{
+  width: 300px;
+  max-width: 300px;
+  min-width: 200px;
+}
+#resultTbl .midCol{
+  width: 100px;
+  text-align: center;
+}
+#resultTbl .shortCol{
+  text-align: center;
+}
