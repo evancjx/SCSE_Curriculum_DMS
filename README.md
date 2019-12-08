@@ -5,7 +5,13 @@
 | Date	    	| Topic		    | Remarks    	|
 | ------------- | ------------- | ------------- |
 | 6 / 12		| Initial Commit| Readme.md is not complete. |
-| 7 / 12 		| Modify Readme	| Readme.md is not complete.<br>Added more information on installing Laravel and setting up MySQL Database|
+| 7 / 12 		| Modify Readme	| Readme.md is not complete.<br>Added more information on installing Laravel and setting up MySQL Database. |
+| 8 / 12		| Modify Laravel| Complete implementation of import functionality. |
+| 8 / 12		| Modify Readme | Readme.md is not complete.<br>Added additional procedures. |
+
+## Contact Me
+
+You may contact me at evancjx@gmail.com or jchang011@e.ntu.edu.sg for any fix or bugs.
 
 ## Getting Started
 
