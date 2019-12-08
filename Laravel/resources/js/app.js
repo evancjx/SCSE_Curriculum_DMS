@@ -170,7 +170,7 @@ $(document).ready(function(){
     //Learning Outcomes
     function newLORow(ID){
         return '<tr id="LO'+ID+'" class="LO_row">' +
-            '<td class="border border-dark"><textarea id="iLO'+ID+'" class="w-100 loTextArea" name="objectives[LO][]" placeholder="Learning Outcomes"></textarea></td>' +
+            '<td class="border border-dark"><textarea id="iLO'+ID+'" name="objectives[LO]['+ID+'][description]" placeholder="Learning Outcomes"></textarea></td>' +
             '<td class="border border-dark action"><input id="LO'+ID+'" class="btn-danger LO_remove" type="button" name="remove" value="Del" /></td>' +
             '</tr>';
     }
@@ -218,10 +218,10 @@ $(document).ready(function(){
     //Contents
     function newContentRow(SN){
         return '<tr id="topic'+SN+'" class="content_topic">'+
-            '<td class="border border-dark short-col"><input type="text" name="content[ID][]" placeholder="S/N" value="'+SN+'"/></td>'+
-            '<td class="border border-dark"><textarea class="description" name="content[topic][]" placeholder="Topic description"></textarea></td>'+
-            '<td class="border border-dark att1 "><textarea name="content[details1][]" placeholder="Topic details"></textarea></td>'+
-            '<td class="border border-dark att2"><textarea name="content[details2][]" placeholder="Topic details"></textarea>'+
+            '<td class="border border-dark short-col"><input type="text" name="content[topic]['+SN+'][ID]" placeholder="S/N" value="'+SN+'"/></td>'+
+            '<td class="border border-dark"><textarea class="description" name="content[topic]['+SN+'][topic]" placeholder="Topic description"></textarea></td>'+
+            '<td class="border border-dark att1 "><textarea name="content[topic]['+SN+'][details1]" placeholder="Topic details"></textarea></td>'+
+            '<td class="border border-dark att2"><textarea name="content[topic]['+SN+'][details2]" placeholder="Topic details"></textarea>'+
             '<label><input type="checkbox" id="topic'+SN+'" class="attDetailMerge" name="content[merge][]" value="'+SN+'"/> Merge bottom</label></td>'+
             '<td class="border border-dark"><input id="topic'+SN+'" class="btn-danger content_remove" type="button" value="Del" /></td>';
     }
@@ -278,7 +278,7 @@ $(document).ready(function(){
     //Assessment
     function newAssessmentRow(SN){
         return '<tr id="assessment'+SN+'" class="assessment_row">'+
-            '<td class="border border-dark"><textarea name="assessment[component][]" placeholder="Component"></textarea></td>'+
+            '<td class="border border-dark"><textarea name="assessment['+SN+'][title]" placeholder="Component"></textarea></td>'+
             '<td class="border border-dark text-center LO_col"></td>'+
             '<td class="border border-dark pl-3 gradAttrCol"></td>'+
             '<td class="border border-dark"><input type="text" id="w'+SN+'" class="assessmentWeight" name="assessment['+SN+'][weight]" placeholder="Percentage"/></td>'+
@@ -310,8 +310,8 @@ $(document).ready(function(){
         for (let id = $('#assessment tr').length; id <= 2; id++) $('#assessment').append(newAssessmentRow(id));
         assessment_DisplayALL_LO_CheckBox();
     }
-    function assessment_UpdateCurrentRows(){
-        console.log('assessment_UpdateCurrentRows');
+    function assessment_Reindex(){
+        // console.log('assessment_Reindex');
         let assessment_rows = document.getElementsByClassName('assessment_row');
         for (let i = 1; i < assessment_rows.length; i++){
             assessment_rows[i].id = 'assessment'+(i+1).toString();
@@ -334,7 +334,7 @@ $(document).ready(function(){
     });
     $(document).on('click', '.assessment_remove', function(){
         $('#'+$(this).attr("id")).remove();
-        assessment_UpdateCurrentRows();
+        assessment_Reindex();
     });
 
     //MapGradAttr
@@ -460,8 +460,8 @@ $(document).ready(function(){
     //Approach
     function newApproachRow(SN){
         return '<tr id="approach'+SN+'" class="approach_row">' +
-            '<td class="border border-dark"><textarea name="approach[header][]" placeholder="Approach Header"></textarea></td>' +
-            '<td class="border border-dark"><textarea name="approach[description][]" placeholder="Approach Description"></textarea></td>' +
+            '<td class="border border-dark"><textarea name="approach['+SN+'][header]" placeholder="Approach Header"></textarea></td>' +
+            '<td class="border border-dark"><textarea name="approach['+SN+'][description]" placeholder="Approach Description"></textarea></td>' +
             '<td class="border border-dark action"><input id="approach'+SN+'" class="btn-danger approach_remove" type="button" value="Del"/></td>' +
             '</tr>';
     }
@@ -503,10 +503,10 @@ $(document).ready(function(){
     //Instructor
     function newInstructorRow(SN){
         return '<tr id="instructor'+SN+'" class="instructor_row">' +
-            '<td class="border border-dark w-25"><input type="text" name="instructor[name][]" placeholder="Name" /></td>' +
-            '<td class="border border-dark w-25"><input type="text" name="instructor[office][]" placeholder="Office Location" /></td></td>' +
-            '<td class="border border-dark w-25"><input type="text" name="instructor[phone][]" placeholder="Phone" /></td></td>' +
-            '<td class="border border-dark w-25"><input type="text" name="instructor[email][]" placeholder="Email" /></td></td>' +
+            '<td class="border border-dark w-25"><input type="text" name="instructor['+SN+'][name]" placeholder="Name" /></td>' +
+            '<td class="border border-dark w-25"><input type="text" name="instructor['+SN+'][office]" placeholder="Office Location" /></td></td>' +
+            '<td class="border border-dark w-25"><input type="text" name="instructor['+SN+'][phone]" placeholder="Phone" /></td></td>' +
+            '<td class="border border-dark w-25"><input type="text" name="instructor['+SN+'][email]" placeholder="Email" /></td></td>' +
             '<td class="border border-dark action"><input id="instructor'+SN+'" class="btn-danger instructor_remove" type="button" value="Del"/></td>';
     }
     $('#addNewInstructor').click(function(){
@@ -549,6 +549,15 @@ $(document).ready(function(){
         }
         schedule_DisplayAll_LO_CheckBox();
     }
+    function schedule_Reindex(){
+        let schedule_rows = document.getElementsByClassName('schedule_row');
+        for (let i = 1; i < schedule_rows.length; i++){
+            schedule_rows[i].id = 'schedule'+(i+1).toString();
+            schedule_rows[i].children[0].children[0].value = (i+1);
+            schedule_rows[i].children[2].children[0].children[0].name = 'schedule['+(i+1)+'][LO][]';
+            schedule_rows[i].children[5].children[0].id = 'schedule'+(i+1).toString();
+        }
+    }
     $('#addNewSchedule').click(function(){
         let numScheduleRow = $('#schedule tr').length - 1;
         $('#schedule').append(newScheduleRow(numScheduleRow+1));
@@ -556,24 +565,18 @@ $(document).ready(function(){
     });
     $(document).on('click', '.schedule_remove', function(){
         $('#'+$(this).attr("id")).remove();
-
-        let schedule_rows = document.getElementsByClassName('schedule_row');
-        for (let i = 1; i < schedule_rows.length; i++){
-            schedule_rows[i].id = 'schedule'+(i+1).toString();
-            schedule_rows[i].children[0].children[0].value = (i+1);
-            schedule_rows[i].children[5].children[0].id = 'schedule'+(i+1).toString();
-        }
+        schedule_Reindex();
     });
 
     //appendix
     function newAppendixRow(SN){
         return '<tr id="appendix'+SN+'" class="appendix_row">' +
             '<td class="border border-dark border-bottom-0">' +
-            '<label for="appendix'+SN+'Input">Appendix '+SN+':</label><input id="appendix'+SN+'Input" type="text" name="appendix[header][]" placeholder="Appendix Header"/></td>' +
+            '<label for="appendix'+SN+'Input">Appendix '+SN+':</label><input id="appendix'+SN+'Input" type="text" name="appendix['+SN+'][header]" placeholder="Appendix Header"/></td>' +
             '<td class="border border-dark border-bottom-0 action"><input id="appendix'+SN+'" class="btn-danger appendix_remove" type="button" value="Del"/>Appendix</td><tr>' +
             '<tr id="appendix'+SN+'Description"" class="appendix_description_row">' +
             '<td class="border border-dark border-top-0">' +
-            '<label for="appendix'+SN+'Textarea">Description:</label><textarea id="appendix'+SN+'Textarea" name="appendix[description][]" placeholder="Description"></textarea></td>' +
+            '<label for="appendix'+SN+'Textarea">Description:</label><textarea id="appendix'+SN+'Textarea" name="appendix['+SN+'][description]" placeholder="Description"></textarea></td>' +
             '<td class="border border-dark border-top-0 action"><input id="appendix'+SN+'" class="addNewCriteria" type="button" value="Add"/>Criteria Table</td>' +
             '</tr>';
     }
@@ -589,10 +592,10 @@ $(document).ready(function(){
             '<td class="w-25 border border-dark mid-col">Pass Standard\r\n(40-80%)</td>' +
             '<td class="w-25 border border-dark mid-col">High Standard\r\n(81-100%)</td>' +
             '</tr><tr id="appendix'+appendix_id+'Criteria1" class="appendix'+appendix_id+'_criteria_row">' +
-            '<td class="w-25 border border-dark mid-col"><textarea name="appendix[criteria]['+appendix_id+'][header][]" placeholder="Assessment"></textarea></td>' +
-            '<td class="w-25 border border-dark mid-col"><textarea name="appendix[criteria]['+appendix_id+'][fail][]" placeholder="Fail Standards"></textarea></td>' +
-            '<td class="w-25 border border-dark mid-col"><textarea name="appendix[criteria]['+appendix_id+'][pass][]" placeholder="Pass Standards"></textarea></td>' +
-            '<td class="w-25 border border-dark mid-col"><textarea name="appendix[criteria]['+appendix_id+'][high][]" placeholder="High Standards"></textarea></td>' +
+            '<td class="w-25 border border-dark mid-col"><textarea name="appendix['+appendix_id+'][criteria][1][header]" placeholder="Assessment"></textarea></td>' +
+            '<td class="w-25 border border-dark mid-col"><textarea name="appendix['+appendix_id+'][criteria][1][fail]" placeholder="Fail Standards"></textarea></td>' +
+            '<td class="w-25 border border-dark mid-col"><textarea name="appendix['+appendix_id+'][criteria][1][pass]" placeholder="Pass Standards"></textarea></td>' +
+            '<td class="w-25 border border-dark mid-col"><textarea name="appendix['+appendix_id+'][criteria][1][high]" placeholder="High Standards"></textarea></td>' +
             '<td class="border border-dark action"><input id="appendix'+appendix_id+'" class="addNewCriteriaRow" type="button" value="Add" />Criteria Row</td>' +
             '</tr>' +
             '</table>' +
@@ -600,10 +603,10 @@ $(document).ready(function(){
     }
     function newCriteriaRow(appendix_id, SN){
         return '<tr id="appendix'+appendix_id+'Criteria'+SN+'" class="appendix'+appendix_id+'_criteria_row">' +
-            '<td class="w-25 border border-dark mid-col"><textarea name="appendix[criteria]['+appendix_id+'][header][]" placeholder="Assessment"></textarea></td>' +
-            '<td class="w-25 border border-dark mid-col"><textarea name="appendix[criteria]['+appendix_id+'][fail][]" placeholder="Fail Standards"></textarea></td>' +
-            '<td class="w-25 border border-dark mid-col"><textarea name="appendix[criteria]['+appendix_id+'][pass][]" placeholder="Pass Standards"></textarea></td>' +
-            '<td class="w-25 border border-dark mid-col"><textarea name="appendix[criteria]['+appendix_id+'][high][]" placeholder="High Standards"></textarea></td>' +
+            '<td class="w-25 border border-dark mid-col"><textarea name="appendix['+appendix_id+'][criteria]['+SN+'][header]" placeholder="Assessment"></textarea></td>' +
+            '<td class="w-25 border border-dark mid-col"><textarea name="appendix['+appendix_id+'][criteria]['+SN+'][fail]" placeholder="Fail Standards"></textarea></td>' +
+            '<td class="w-25 border border-dark mid-col"><textarea name="appendix['+appendix_id+'][criteria]['+SN+'][pass]" placeholder="Pass Standards"></textarea></td>' +
+            '<td class="w-25 border border-dark mid-col"><textarea name="appendix['+appendix_id+'][criteria]['+SN+'][high]" placeholder="High Standards"></textarea></td>' +
             '<td class="border border-dark action"><input id="appendix'+appendix_id+'Criteria'+SN+'" class="btn-danger criteriaRow_remove" type="button" value="Del" />Criteria Row</td>' +
             '</tr>';
     }

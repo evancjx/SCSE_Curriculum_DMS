@@ -2,12 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Course;
-use App\Exports\CurriculumExport;
-use Illuminate\Foundation\Http\FormRequest;
+use App\CommonFunc;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Maatwebsite\Excel\Facades\Excel;
 
 class ImportExportController extends Controller
 {
@@ -51,7 +48,7 @@ class ImportExportController extends Controller
                 case 'Course Aims':
                 case 'Formative Feedback':
                     if($details == null) break;
-                    fputcsv($fp, array($details, null));
+                    fputcsv($fp, array($details));
                     break;
                 case 'Learning Outcomes':
                     fputcsv($fp, ['Description', null, null, null, 'Grad Attributes']); // Header
@@ -78,13 +75,14 @@ class ImportExportController extends Controller
                     }
                     break;
                 case 'Assessment':
-                    fputcsv($fp, ['S/N', 'Component', 'Weightage', 'Category', 'LOs', 'Grad Attributes']); // Header
+                    fputcsv($fp, ['S/N', 'Component', 'Weightage', 'Category', 'LOs', 'Grad Attributes', 'Rubrics']); // Header
                     foreach($details as $key => $detail){
                         $row = [$key, $detail['component'], $detail['weightage'], $detail['category']];
                         if(isset($detail['LOs']))
                             $row[] = $detail['LOs'];
                         if(isset($detail['gradAttr']))
                             $row[] = $detail['gradAttr'];
+                        $row[] = $detail['rubrics'];
                         fputcsv($fp, $row);
                     }
                     break;
@@ -139,8 +137,7 @@ class ImportExportController extends Controller
     }
 
     public function index(){
-        return view('import.index',[
-        ]);
+        return view('import.index',[]);
     }
 
     public function import(Request $request){
@@ -163,8 +160,8 @@ class ImportExportController extends Controller
         $file = fopen($tempPath, 'r');
         $sections = [
             'Main Details', 'Pre-requisite', 'Contact Hour', 'Course Aims', 'Learning Outcomes',
-            'Course\'s Content Attribute', 'Content', 'Assessment',
-            'Formative Feedback', 'Approach', 'References', 'Course Instructors',
+            'Content Att', 'Content', 'Assessment',
+            'Formative Feedback', 'Approaches', 'References', 'Instructors',
             'Schedule', 'Appendix', 'Criteria'];
         $curriculum = array(
             'course'=>array(
@@ -183,10 +180,7 @@ class ImportExportController extends Controller
             'content'=>array(
                 'att1'=>'',
                 'att2'=>'',
-                'ID'=>array(),
                 'topic'=>array(),
-                'details1'=>array(),
-                'details2'=>array(),
                 'merge'=>array()),
             'assessment'=>[],
             'formativeFeedback'=>'',
@@ -196,10 +190,10 @@ class ImportExportController extends Controller
             'schedule'=>[],
             'appendix'=>[],
         );
-        $currentAppendixID = 0;
+        $currentAppendixID = 0; $currentCriteriaID = 0;
+        $isAppendix = True;
         $currentSection = null;
         while(($columns = fgetcsv($file, 1000, ',')) !== false){
-//            var_dump($columns);
             if (in_array($columns[0], $sections)){
                 $currentSection = $columns[0];
                 continue;
@@ -207,14 +201,20 @@ class ImportExportController extends Controller
             switch ($currentSection) {
                 case 'Main Details':
                     if ($columns[0] == null) break;
+                    else if ($columns[0] == 'rep' and !empty($columns[1]))
+                        $curriculum['course']['rep'] = explode('/', $columns[1]);
                     else if (isset($columns[1]))
                         $curriculum['course'][$columns[0]] = $columns[1];
                     else
                         $curriculum['course'][$columns[0]] = '';
                     break;
+                case 'Pre-requisite':
+                    if($columns[0] == null) break;
+                    array_push($curriculum['prerequisite'], $columns[0]);
+                    break;
                 case 'Contact Hour':
                     if ($columns[0] == null) break;
-                    else if($columns[0] == 'Lecture') break;
+                    else if ($columns[0] == 'Lecture') break;
 
                     if (isset($columns[0]) and $columns[0] != ''){
                         array_push($curriculum['course']['contactType'], 'lecture');
@@ -237,17 +237,158 @@ class ImportExportController extends Controller
                         array_push($curriculum['course']['contactHour'], $columns[4]);
                     }
                     break;
-                case 'Pre-requisite':
-                    if($columns[0] == null) break;
-                    array_push($curriculum['prerequisite'], $columns[0]);
-                    break;
                 case 'Course Aims':
-                    if($columns[0] == null) break;
+                    if ($columns[0] == null) break;
                     $curriculum['objectives']['aims'] = $columns[0];
+                    break;
+                case 'Learning Outcomes':
+                    if ($columns[0] == null) break;
+                    else if ($columns[0] == 'Description')break;
+
+                    if (isset($columns[0])){
+                        $index = sizeof($curriculum['objectives']['LO']) + 1;
+                        $curriculum['objectives']['LO'][$index]['description'] = $columns[0];
+                        if (isset($columns[4]) and !empty($columns)){
+                            $curriculum['objectives']['LO'][$index]['GradAttr'] = explode(',', preg_replace('/\s/', '', $columns[4]));
+                        }
+                    }
+                    break;
+                case 'Content Att':
+                    if ($columns[0] == null) break;
+                    else if ($columns[0] == 'Att 1')break;
+
+                    $curriculum['content']['att1'] = $columns[0];
+                    $curriculum['content']['att2'] = $columns[1];
+                    break;
+                case 'Content':
+                    if ($columns[0] == null) break;
+                    else if ($columns[0] == 'S/N')break;
+
+                    if (isset($columns[0])){
+                        $curriculum['content']['topic'][$columns[0]] = [
+                            'ID'=>$columns[0],
+                            'description'=>$columns[1],
+                            'details1'=>$columns[2],
+                            'details2'=>$columns[3]
+                        ];
+                        if (isset($columns[4]) && $columns[4] == '2')
+                            array_push($curriculum['content']['merge'], $columns[0]);
+                    }
+                    break;
+                case 'Assessment':
+                    if ($columns[0] == null) break;
+                    else if ($columns[0] == 'S/N') break;
+
+                    if (isset($columns[0])){
+                        $curriculum['assessment'][$columns[0]] = [
+                            'title'=>$columns[1],
+                            'LO'=>explode(', ',$columns[4]),
+                            'gradAttr'=>explode(',', preg_replace('/\s/', '', $columns[5])),
+                            'weight'=>$columns[2],
+                            'category'=>$columns[3],
+                            'rubrics'=>$columns[6]
+                        ];
+                    }
+                    break;
+                case 'Formative Feedback':
+                    if ($columns[0] == null) break;
+                    if (isset($columns[0]))
+                        $curriculum['formativeFeedback'] = $columns[0];
+                    break;
+                case 'Approaches':
+                    if ($columns[0] == null) break;
+                    else if ($columns[0] == 'Header') break;
+
+                    if (isset($columns[0])){
+                        $index = count($curriculum['approach'])+1;
+                        $curriculum['approach'][$index]['header'] = $columns[0];
+                        $curriculum['approach'][$index]['description'] = $columns[1];
+                    }
+                    break;
+                case 'References':
+                    if ($columns[0] == null) break;
+
+                    if (isset($columns[0]))
+                        array_push($curriculum['reference'], $columns[0]);
+                    break;
+                case 'Instructors':
+                    if ($columns[0] == null) break;
+                    else if ($columns[0] == 'Name') break;
+
+                    if (isset($columns[0]) && isset($columns[3])){
+                        $index = count($curriculum['instructor'])+1;
+                        $curriculum['instructor'][$index]['name'] = $columns[0];
+                        $curriculum['instructor'][$index]['email'] = $columns[3];
+
+                        if (isset($columns[1]) && !empty($columns[1]))
+                            $curriculum['instructor'][$index]['office'] = $columns[1];
+                        else
+                            $curriculum['instructor'][$index]['office'] = null;
+
+                        if (isset($columns[2]) && !empty($columns[2]))
+                            $curriculum['instructor'][$index]['phone'] = $columns[2];
+                        else
+                            $curriculum['instructor'][$index]['phone'] = null;
+                    }
+                    break;
+                case 'Schedule':
+                    if ($columns[0] == null) break;
+                    else if ($columns[0] == 'Week') break;
+
+                    if (isset($columns[1]) && !empty($columns[1])){
+                        $index = count($curriculum['schedule']) + 1;
+                        $curriculum['schedule'][$index]['topic'] = $columns[1];
+                        if (isset($columns[0]) && !empty($columns[0]))
+                            $curriculum['schedule'][$index]['week'] = $columns[0];
+                        else
+                            $curriculum['schedule'][$index]['week'] = $index;
+
+                        if (isset($columns[2]) && !empty($columns[2]))
+                            $curriculum['schedule'][$index]['readings'] = $columns[2];
+                        else
+                            $curriculum['schedule'][$index]['readings'] = null;
+
+                        if (isset($columns[3]) && !empty($columns[3]))
+                            $curriculum['schedule'][$index]['activities'] = $columns[3];
+                        else
+                            $curriculum['schedule'][$index]['activities'] = null;
+
+                        if (isset($columns[4]) && !empty($columns[4]))
+                            $curriculum['schedule'][$index]['LO'] = explode(', ', $columns[4]);
+                        else
+                            $curriculum['schedule'][$index]['LO'] = null;
+                    }
+                    break;
+                case 'Appendix':
+                    if($columns[0] == null) {
+                        $isAppendix = True;
+                        break;
+                    }
+                    else if($columns[0] == 'ID'){
+                        $currentAppendixID = $columns[1];
+                        $isAppendix = True;
+                        break;
+                    }
+                    else if ($columns[0] == '---Criteria---'){
+                        $isAppendix = False;
+                        break;
+                    }
+
+                    if ($isAppendix === True){
+                        $curriculum['appendix'][$currentAppendixID][strtolower($columns[0])] = $columns[1];
+                    }
+                    else if ($isAppendix === False){
+                        if ($columns[0] == 'Header') $currentCriteriaID++;
+                        $curriculum['appendix'][$currentAppendixID]['criteria'][$currentCriteriaID][strtolower($columns[0])] = $columns[1];
+                    }
+
                     break;
             }
         }
-        echo json_encode($curriculum, JSON_PRETTY_PRINT);
+//        echo json_encode($curriculum, JSON_PRETTY_PRINT);
+
+        CommonFunc::store($curriculum);
+        return redirect('/curriculum/'.$curriculum['course']['code']);
     }
 
     public function export($code){
@@ -351,6 +492,14 @@ class ImportExportController extends Controller
             foreach($assessments_gradAttr as $assessment){
                 $curriculum['Assessment'][$assessment->ID]['gradAttr'] = $assessment->gradAttr;
             }
+        $assessments_rubrics = DB::connection('mysql_curriculum')->table('rubrics')
+            ->where('course_code', '=', $code)
+            ->select(['assessment_id', 'description'])
+            ->get();
+        if(count($assessments_rubrics) != 0 && $curriculum['Assessment'] != null)
+            foreach($assessments_rubrics as $rubric){
+                $curriculum['Assessment'][$rubric->assessment_id]['rubrics'] = $rubric->description;
+            }
         $formativeFeedback = DB::connection('mysql_curriculum')->table('formativeFeedback')
             ->where('course_code', '=', $code)
             ->first();
@@ -433,20 +582,5 @@ class ImportExportController extends Controller
 //        echo json_encode($curriculum, JSON_PRETTY_PRINT);
 //        die;
         $this->to_csv($curriculum);
-    }
-}
-
-class CsvImportRequest extends FormRequest{
-    public function authorize(){
-        return True;
-    }
-    public function rules(){
-        return [
-            'csv_file' => [
-                'required',
-                'file',
-                'mimes:csv,txt',
-            ]
-        ];
     }
 }

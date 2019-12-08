@@ -96,6 +96,7 @@
             @endif
         </tr>
     </table>
+    {{--Objectives--}}
     <table class="vertical-table mx-auto mt-5">
         <tr>
             <td class="border border-dark font-weight-bold"><label for="course_aims">Course Aims</label></td>
@@ -115,7 +116,7 @@
                     @if(isset($course) && !$course->learningOutcomes->isEmpty())
                         @foreach($course->learningOutcomes as $key=>$LO)
                             <tr id="LO{{$LO->ID}}" class="LO_row">
-                                <td class="border border-dark"><textarea id="iLO{{$LO->ID}}" class="w-100 loTextArea" name="objectives[LO][]" placeholder="Learning Outcomes">{{$LO->description}}</textarea></td>
+                                <td class="border border-dark"><textarea id="iLO{{$LO->ID}}" class="w-100 loTextArea" name="objectives[LO][{{$LO->ID}}][description]" placeholder="Learning Outcomes">{{$LO->description}}</textarea></td>
                                 @if($key === 0)
                                     <td class="border border-dark action"><input id="addNewLO" type="button" value="Add"/></td>
                                 @else
@@ -125,7 +126,7 @@
                         @endforeach
                     @else
                         <tr id="LO1" class="LO_row">
-                            <td class="border border-dark"><textarea id="iLO1" class="w-100 loTextArea" name="objectives[LO][]" placeholder="Learning Outcomes"></textarea></td>
+                            <td class="border border-dark"><textarea id="iLO1" class="w-100 loTextArea" name="objectives[LO][1][description]" placeholder="Learning Outcomes"></textarea></td>
                             <td class="border border-dark action"><input id="addNewLO" type="button" value="Add"/></td>
                         </tr>
                     @endif
@@ -133,12 +134,9 @@
             </td>
         </tr>
     </table>
+    {{--Content--}}
     <table class="horizontal-table mx-auto mt-5">
-        <tr>
-            <td class="border border-dark border-bottom-0 font-weight-bold">
-                Course Contents
-            </td>
-        </tr>
+        <tr><td class="border border-dark border-bottom-0 font-weight-bold">Course Contents</td></tr>
         <tr>
             <td class="border border-dark border-top-0 p-1">
                 <table id="contents" class="mt-3 w-100">
@@ -157,16 +155,16 @@
                         @foreach($course->content as $key=>$content)
                             <tr id="topic{{$content->ID}}" class="content_topic">
                                 <td class="border border-dark short-col">
-                                    <input id="SN" type="text" name="content[ID][]" placeholder="S/N" value="{{$content->ID}}"/>
+                                    <input id="SN" type="text" name="content[topic][{{$content->ID}}][ID]" placeholder="S/N" value="{{$content->ID}}"/>
                                 </td>
                                 <td class="border border-dark">
-                                    <textarea class="description" name="content[topic][]" placeholder="Topic description">{{$content->topics}}</textarea>
+                                    <textarea class="description" name="content[topic][{{$content->ID}}][description]" placeholder="Topic description">{{$content->topics}}</textarea>
                                 </td>
                                 <td class="border border-dark">
-                                    <textarea class="" name="content[details1][]" placeholder="Topic details">@if(isset($content->contentAttDetails->details1)){{$content->contentAttDetails->details1}}@endif</textarea>
+                                    <textarea class="" name="content[topic][{{$content->ID}}][details1]" placeholder="Topic details">@if(isset($content->contentAttDetails->details1)){{$content->contentAttDetails->details1}}@endif</textarea>
                                 </td>
                                 <td class="border border-dark att2" @if($content->contentAttDetails->rowspan == 1) rowspan="1" @elseif($content->contentAttDetails->rowspan == 2) rowspan="2" @elseif($content->contentAttDetails->rowspan == 0) style="display:none" @endif>
-                                    <textarea class="" name="content[details2][]" placeholder="Topic details">@if(isset($content->contentAttDetails->details2)){{$content->contentAttDetails->details2}}@endif</textarea>
+                                    <textarea class="" name="content[topic][{{$content->ID}}][details2]" placeholder="Topic details">@if(isset($content->contentAttDetails->details2)){{$content->contentAttDetails->details2}}@endif</textarea>
                                     <label><input id="topic{{$content->ID}}" class="attDetailMerge" type="checkbox" name="content[merge][]" value="{{$content->ID}}" @if($content->contentAttDetails->rowspan == 2) checked @endif/> Merge bottom</label>
                                 </td>
                                 <td class="border border-dark">
@@ -181,16 +179,16 @@
                     @else
                         <tr id="topic1" class="content_topic">
                             <td class="border border-dark short-col">
-                                <input id="SN" type="text" name="content[ID][]" placeholder="S/N" value="1"/>
+                                <input id="SN" type="text" name="content[topic][1][ID]" placeholder="S/N" value="1"/>
                             </td>
                             <td class="border border-dark">
-                                <textarea class="description" name="content[topic][]" placeholder="Topic description"></textarea>
+                                <textarea class="description" name="content[topic][1][description]" placeholder="Topic description"></textarea>
                             </td>
                             <td class="border border-dark">
-                                <textarea class="" name="content[details1][]" placeholder="Topic details"></textarea>
+                                <textarea class="" name="content[topic][1][details1]" placeholder="Topic details"></textarea>
                             </td>
                             <td class="border border-dark att2">
-                                <textarea class="" name="content[details2][]" placeholder="Topic details"></textarea>
+                                <textarea class="" name="content[topic][1][details2]" placeholder="Topic details"></textarea>
                                 <label><input id="topic1" class="attDetailMerge" type="checkbox" name="content[merge][]" value="1"/> Merge bottom</label>
                             </td>
                             <td class="border border-dark">
@@ -202,6 +200,7 @@
             </td>
         </tr>
     </table>
+    {{--Assessment--}}
     <table class="horizontal-table mx-auto mt-5 pageBreak">
         <tr>
             <td class="border border-dark border-bottom-0 font-weight-bold">Assessment</td>
@@ -222,7 +221,7 @@
                         @foreach($course->assessment as $key=>$assessment)
                             <tr id="assessment{{$assessment->ID}}" class="assessment_row">
                                 <td class="border border-dark">
-                                    <textarea name="assessment[component][]" placeholder="Component">{{$assessment->component}}</textarea>
+                                    <textarea name="assessment[{{$assessment->ID}}][title]" placeholder="Component">{{$assessment->component}}</textarea>
                                 </td>
                                 <td class="border border-dark text-center LO_col">
                                     @foreach($course->learningOutcomes as $LO_key=>$LO)
@@ -242,9 +241,9 @@
                                     <input type="text" id="w{{$assessment->ID}}" class="assessmentWeight" name="assessment[{{$assessment->ID}}][weight]" placeholder="Percentage" value="{{$assessment->weightage}}"/>
                                 </td>
                                 <td class="border border-dark pl-3">
-                                    <input id="assessment{{$assessment->ID}}Individual" type="radio" name="assessment[{{$assessment->ID}}][category][]" value="individual" @if($assessment->category == 'individual') checked @endif/>
+                                    <input id="assessment{{$assessment->ID}}Individual" type="radio" name="assessment[{{$assessment->ID}}][category]" value="individual" @if($assessment->category == 'individual') checked @endif/>
                                     <label for="assessment{{$assessment->ID}}Individual">Individual</label><br>
-                                    <input id="assessment{{$assessment->ID}}Team" type="radio" name="assessment[{{$assessment->ID}}][category][]" value="team" @if($assessment->category == 'team') checked @endif/>
+                                    <input id="assessment{{$assessment->ID}}Team" type="radio" name="assessment[{{$assessment->ID}}][category]" value="team" @if($assessment->category == 'team') checked @endif/>
                                     <label for="assessment{{$assessment->ID}}Team">Team</label>
                                 </td>
                                 <td class="border border-dark rubricsCol">
@@ -262,7 +261,7 @@
                     @else
                         <tr id="assessment1" class="assessment_row">
                             <td class="border border-dark">
-                                <textarea name="assessment[component]" placeholder="Component"></textarea>
+                                <textarea name="assessment[1][title]" placeholder="Component"></textarea>
                             </td>
                             <td class="border border-dark text-center LO_col"></td>
                             <td class="border border-dark pl-3 gradAttrCol"></td>
@@ -287,6 +286,7 @@
             </td>
         </tr>
     </table>
+    {{--LOs to Grad Attr--}}
     <table class="horizontal-table mx-auto mt-5 pageBreak">
         <tr>
             <td class="border border-dark border-bottom-0 font-weight-bold">Mapping of Course SLOs to EAB Graduate Attributes</td>
@@ -335,9 +335,9 @@
                                 </td>
                                 <td class="border border-dark mapLOGradAttr" colspan="{{($grad_attr->count())+1}}">
                                     <span class="text-primary">Hover mouse over text for more info.</span><br/>
-                                    @foreach($grad_attr as $element)
+                                    @foreach($grad_attr as $index => $element)
                                         <label class="cbGradAttrLbl">
-                                            <input id="{{$learningOutcome->ID.$element->ID}}" type="checkbox" class="cbGradAttr" name="mappingLO[{{$learningOutcome->ID}}gradAttr][]" value="{{$element->ID}}" @if(in_array($element->ID, $learningOutcome->gradAttr)) checked @endif/>
+                                            <input id="{{$learningOutcome->ID.$element->ID}}" type="checkbox" class="cbGradAttr" name="objectives[LO][{{$learningOutcome->ID}}][GradAttr][]" value="{{$element->ID}}" @if(in_array($element->ID, $learningOutcome->gradAttr)) checked @endif/>
                                             <span title="{{$element->main}}&#13;&#10;{{$element->description}}">&nbsp;{{$element->ID}}&emsp;&emsp;</span>
                                         </label>
                                     @endforeach
@@ -374,6 +374,7 @@
             </td>
         </tr>
     </table>
+    {{--Formative Feedback--}}
     <table class="vertical-table mx-auto mt-5">
         <tr><td class="border border-dark font-weight-bold">
                 Formative Feedback
@@ -384,6 +385,7 @@
             </td>
         </tr>
     </table>
+    {{--Approach--}}
     <table class="vertical-table mx-auto mt-5 border border-dark">
         <tr><td class="border-bottom-0 font-weight-bold">
                 Learning and Teaching approach</td></tr>
@@ -399,10 +401,10 @@
                         @foreach($course->approach as $key=>$approach)
                             <tr id="approach{{$approach->ID}}" class="approach_row">
                                 <td class="border border-dark">
-                                    <textarea name="approach[header][]" placeholder="Approach Header">{{$approach->approach}}</textarea>
+                                    <textarea name="approach[{{$approach->ID}}][header]" placeholder="Approach Header">{{$approach->approach}}</textarea>
                                 </td>
                                 <td class="border border-dark">
-                                    <textarea name="approach[description][]" placeholder="Approach Description">{{$approach->description}}</textarea>
+                                    <textarea name="approach[{{$approach->ID}}][description]" placeholder="Approach Description">{{$approach->description}}</textarea>
                                 </td>
                                 <td class="border border-dark action">
                                 @if($key > 0)
@@ -416,10 +418,10 @@
                     @else
                     <tr id="approach1" class="approach_row">
                         <td class="border border-dark">
-                            <textarea name="approach[header][]" placeholder="Approach Header"></textarea>
+                            <textarea name="approach[1][header]" placeholder="Approach Header"></textarea>
                         </td>
                         <td class="border border-dark">
-                            <textarea name="approach[description][]" placeholder="Approach Description"></textarea>
+                            <textarea name="approach[1][description]" placeholder="Approach Description"></textarea>
                         </td>
                         <td class="border border-dark action">
                             <input id="addNewApproach" type="button" value="Add"/>
@@ -430,10 +432,9 @@
             </td>
         </tr>
     </table>
+    {{--References--}}
     <table class="vertical-table mx-auto mt-5 border border-dark">
-        <tr>
-            <td class="border border-dark font-weight-bold">Reading and References</td>
-        </tr>
+        <tr><td class="border border-dark font-weight-bold">Reading and References</td></tr>
         <tr>
             <td>This course will not use any specific text book. The following books and websites will be used as references materials.</td>
         </tr>
@@ -469,10 +470,9 @@
             </td>
         </tr>
     </table>
+    {{--Instructor--}}
     <table class="vertical-table mx-auto mt-5 border border-dark">
-        <tr><td class="border border-dark border-bottom-0 font-weight-bold">
-                Course Instructor
-            </td></tr>
+        <tr><td class="border border-dark border-bottom-0 font-weight-bold">Course Instructor</td></tr>
         <tr>
             <td class="p-1">
                 <table id="instructor" class="border border-dark mx-auto w-100">
@@ -485,22 +485,22 @@
                     </tr>
                     @if(isset($course) and !$course->instructor->isempty())
                         @foreach($course->instructor as $key=>$instructor)
-                            <tr id="instructor{{$instructor->academicStaffID}}" class="instructor_row">
+                            <tr id="instructor{{$key+1}}" class="instructor_row">
                                 <td class="border border-dark w-25">
-                                    <input type="text" name="instructor[name][]" placeholder="Name" value="{{$instructor->academicStaff->name}}"/>
+                                    <input type="text" name="instructor[{{$key+1}}][name]" placeholder="Name" value="{{$instructor->academicStaff->name}}"/>
                                 </td>
                                 <td class="border border-dark w-25">
-                                    <input type="text" name="instructor[office][]" placeholder="Office Location" value="{{$instructor->academicStaff->office}}"/>
+                                    <input type="text" name="instructor[{{$key+1}}][office]" placeholder="Office Location" value="{{$instructor->academicStaff->office}}"/>
                                 </td>
                                 <td class="border border-dark w-25">
-                                    <input type="text" name="instructor[phone][]" placeholder="Phone" value="{{$instructor->academicStaff->phone}}"/>
+                                    <input type="text" name="instructor[{{$key+1}}][phone]" placeholder="Phone" value="{{$instructor->academicStaff->phone}}"/>
                                 </td>
                                 <td class="border border-dark w-25">
-                                    <input type="text" name="instructor[email][]" placeholder="Email" value="{{$instructor->academicStaff->email}}"/>
+                                    <input type="text" name="instructor[{{$key+1}}][email]" placeholder="Email" value="{{$instructor->academicStaff->email}}"/>
                                 </td>
                                 <td>
                                     @if($key > 0)
-                                        <input id="instructor{{$instructor->academicStaffID}}" class="btn-danger instructor_remove" type="button" value="Del"/>
+                                        <input id="instructor{{$key+1}}" class="btn-danger instructor_remove" type="button" value="Del"/>
                                     @else
                                         <input id="addNewInstructor" type="button" value="Add"/>
                                     @endif
@@ -510,16 +510,16 @@
                     @else
                         <tr id="instructor1" class="instructor_row">
                             <td class="border border-dark w-25">
-                                <input type="text" name="instructor[name][]" placeholder="Name" />
+                                <input type="text" name="instructor[0][name]" placeholder="Name" />
                             </td>
                             <td class="border border-dark w-25">
-                                <input type="text" name="instructor[office][]" placeholder="Office Location" />
+                                <input type="text" name="instructor[0][office]" placeholder="Office Location" />
                             </td>
                             <td class="border border-dark w-25">
-                                <input type="text" name="instructor[phone][]" placeholder="Phone" />
+                                <input type="text" name="instructor[0][phone]" placeholder="Phone" />
                             </td>
                             <td class="border border-dark w-25">
-                                <input type="text" name="instructor[email][]" placeholder="Email" />
+                                <input type="text" name="instructor[0][email]" placeholder="Email" />
                             </td>
                             <td>
                                 <input id="addNewInstructor" type="button" value="Add"/>
@@ -530,10 +530,9 @@
             </td>
         </tr>
     </table>
+    {{--Schedule--}}
     <table class="horizontal-table mx-auto mt-5 border border-dark pageBreak">
-        <tr><td class="border border-dark border-bottom-0 font-weight-bold">
-            Weekly Schedule
-        </td></tr>
+        <tr><td class="border border-dark border-bottom-0 font-weight-bold">Weekly Schedule</td></tr>
         <tr>
             <td class="p-1">
                 <table id="schedule" class="border border-dark mx-auto w-100">
@@ -549,22 +548,22 @@
                         @foreach($course->schedule as $key=>$schedule)
                             <tr id="schedule{{$schedule->weekID}}" class="schedule_row">
                                 <td class="border border-dark short-col text-right">
-                                    <input type="text" name="schedule[week][]" placeholder="Week" value="{{$schedule->weekID}}"/>
+                                    <input type="text" name="schedule[{{$schedule->weekID}}][week]" placeholder="Week" value="{{$schedule->weekID}}"/>
                                 </td>
                                 <td class="border border-dark topic">
-                                    <textarea name="schedule[topic][]" placeholder="Topic">{{$schedule->topic}}</textarea>
+                                    <textarea name="schedule[{{$schedule->weekID}}][topic]" placeholder="Topic">{{$schedule->topic}}</textarea>
                                 </td>
                                 <td class="border border-dark LO_col text-center">
                                     <!-- LO -->
                                     @foreach($course->learningOutcomes as $LO_key=>$LO)
-                                        <label><input id="s{{$schedule->weekID}}LO{{($LO_key+1)}}" type="checkbox" name="schedule[LO][{{$schedule->weekID}}][]" value="{{$LO->ID}}" @if(in_array($LO->ID, $schedule->LO)) checked @endif/>&emsp;{{$LO->ID}}<br></label>
+                                        <label><input id="s{{$schedule->weekID}}LO{{($LO_key+1)}}" type="checkbox" name="schedule[{{$schedule->weekID}}][LO][]" value="{{$LO->ID}}" @if(in_array($LO->ID, $schedule->LO)) checked @endif/>&emsp;{{$LO->ID}}<br></label>
                                     @endforeach
                                 </td>
                                 <td class="border border-dark">
-                                    <textarea name="schedule[readings][]" placeholder="Readings">{{$schedule->readings}}</textarea>
+                                    <textarea name="schedule[{{$schedule->weekID}}][readings]" placeholder="Readings">{{$schedule->readings}}</textarea>
                                 </td>
                                 <td class="border border-dark">
-                                    <textarea name="schedule[activities][]" placeholder="Activities">{{$schedule->activities}}</textarea>
+                                    <textarea name="schedule[{{$schedule->weekID}}][activities]" placeholder="Activities">{{$schedule->activities}}</textarea>
                                 </td>
                                 <td class="border border-dark action">
                                     @if($key > 0)
@@ -578,19 +577,19 @@
                     @else
                         <tr id="schedule1" class="schedule_row">
                             <td class="border border-dark short-col text-right">
-                                <input type="text" name="schedule[week][]" placeholder="Week" value="1"/>
+                                <input type="text" name="schedule[1][week]" placeholder="Week" value="1"/>
                             </td>
                             <td class="border border-dark topic">
-                                <textarea name="schedule[topic][]" placeholder="Topic"></textarea>
+                                <textarea name="schedule[1][topic]" placeholder="Topic"></textarea>
                             </td>
                             <td class="border border-dark LO_col text-center">
                                 <!-- LO -->
                             </td>
                             <td class="border border-dark">
-                                <textarea name="schedule[readings][]" placeholder="Readings"></textarea>
+                                <textarea name="schedule[1][readings]" placeholder="Readings"></textarea>
                             </td>
                             <td class="border border-dark">
-                                <textarea name="schedule[activities][]" placeholder="Activities"></textarea>
+                                <textarea name="schedule[1][activities]" placeholder="Activities"></textarea>
                             </td>
                             <td class="border border-dark action">
                                 <input id="addNewSchedule" type="button" value="Add"/>
@@ -601,10 +600,9 @@
             </td>
         </tr>
     </table>
+    {{--Appendix--}}
     <table class="vertical-table mx-auto mt-5 border border-dark">
-        <tr>
-            <td class="border border-dark border-bottom-0 font-weight-bold" colspan="2">Appendix</td>
-        </tr>
+        <tr><td class="border border-dark border-bottom-0 font-weight-bold" colspan="2">Appendix</td></tr>
         <tr>
             <td class="border border-dark border-top-0">
                 <table id="appendix" class="w-100">
@@ -613,7 +611,7 @@
                             <tr id="appendix{{$appendix->ID}}" class="appendix_row">
                                 <td class="border border-dark border-bottom-0">
                                     <label for="appendix{{$appendix->ID}}Input">Appendix {{$appendix->ID}}:</label>
-                                    <input id="appendix{{$appendix->ID}}Input" type="text" name="appendix[header][]" placeholder="Appendix Header" value="{{$appendix->header}}"/>
+                                    <input id="appendix{{$appendix->ID}}Input" type="text" name="appendix[{{$appendix->ID}}][header]" placeholder="Appendix Header" value="{{$appendix->header}}"/>
                                 </td>
                                 <td class="border border-dark border-bottom-0 action">
                                     @if($key > 0)
@@ -626,7 +624,7 @@
                             <tr id="appendix{{$appendix->ID}}Description" class="appendix_description_row">
                                 <td class="border border-dark border-top-0">
                                     <label for="appendix{{$appendix->ID}}Textarea">Description:</label>
-                                    <textarea id="appendix{{$appendix->ID}}Textarea" name="appendix[description][]" placeholder="Description">{{$appendix->description}}</textarea>
+                                    <textarea id="appendix{{$appendix->ID}}Textarea" name="appendix[{{$appendix->ID}}][description]" placeholder="Description">{{$appendix->description}}</textarea>
                                 </td>
                                 <td class="border border-dark border-top-0 action">
                                      <input id="appendix{{$appendix->ID}}" class="addNewCriteria" type="button" value="Add" @if(!$appendix->criteria->isempty())disabled @endif/>Criteria Table
@@ -649,10 +647,10 @@
                                         </tr>
                                         @foreach($appendix->criteria as $cKey=>$criteria)
                                             <tr id="appendix{{$appendix->ID}}Criteria{{$criteria->ID}}" class="appendix'+appendix_id+'_criteria_row">
-                                                <td class="w-25 border border-dark mid-col"><textarea name="appendix[criteria][{{$appendix->ID}}][header][]" placeholder="Assessment">{{$criteria->header}}</textarea></td>
-                                                <td class="w-25 border border-dark mid-col"><textarea name="appendix[criteria][{{$appendix->ID}}][fail][]" placeholder="Fail Standards">{{$criteria->fail}}</textarea></td>
-                                                <td class="w-25 border border-dark mid-col"><textarea name="appendix[criteria][{{$appendix->ID}}][pass][]" placeholder="Pass Standards">{{$criteria->pass}}</textarea></td>
-                                                <td class="w-25 border border-dark mid-col"><textarea name="appendix[criteria][{{$appendix->ID}}][high][]" placeholder="High Standards">{{$criteria->high}}</textarea></td>
+                                                <td class="w-25 border border-dark mid-col"><textarea name="appendix[{{$appendix->ID}}][criteria][{{$criteria->ID}}][header]" placeholder="Assessment">{{$criteria->header}}</textarea></td>
+                                                <td class="w-25 border border-dark mid-col"><textarea name="appendix[{{$appendix->ID}}][criteria][{{$criteria->ID}}][fail]" placeholder="Fail Standards">{{$criteria->fail}}</textarea></td>
+                                                <td class="w-25 border border-dark mid-col"><textarea name="appendix[{{$appendix->ID}}][criteria][{{$criteria->ID}}][pass]" placeholder="Pass Standards">{{$criteria->pass}}</textarea></td>
+                                                <td class="w-25 border border-dark mid-col"><textarea name="appendix[{{$appendix->ID}}][criteria][{{$criteria->ID}}][high]" placeholder="High Standards">{{$criteria->high}}</textarea></td>
                                                 <td class="border border-dark action">
                                                 @if($cKey > 0)
                                                     <input id="appendix{{$appendix->ID}}Criteria{{$criteria->ID}}" class="btn-danger criteriaRow_remove" type="button" value="Del" />
@@ -670,7 +668,7 @@
                         <tr id="appendix1" class="appendix_row">
                             <td class="border border-dark border-bottom-0">
                                 <label for="appendix1Input">Appendix 1:</label>
-                                <input id="appendix1Input" type="text" name="appendix[header][]" placeholder="Appendix Header"  />
+                                <input id="appendix1Input" type="text" name="appendix[1][header]" placeholder="Appendix Header"  />
                             </td>
                             <td class="border border-dark border-bottom-0 action">
                                 <input id="addNewAppendix" type="button" value="Add"/>Appendix
@@ -679,7 +677,7 @@
                         <tr id="appendix1Description" class="appendix_description_row">
                             <td class="border border-dark border-top-0">
                                 <label for="appendix1Textarea">Description:</label>
-                                <textarea id="appendix1Textarea" name="appendix[description][]" placeholder="Description"></textarea>
+                                <textarea id="appendix1Textarea" name="appendix[1][description]" placeholder="Description"></textarea>
                             </td>
                             <td class="border border-dark border-top-0 action">
                                 <input id="appendix1" class="addNewCriteria" type="button" value="Add"/>Criteria Table
