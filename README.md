@@ -21,7 +21,7 @@
 
 2. Run Command Prompt and change dictory to the 'SCSE_Curriculum_DMS' folder
 
-3. Download the project's source code from: https://github.com/evancjx/SCSE_Curriculum_DMS by running the command below:
+3. Download the project's source code from: https://github.com/evancjx/SCSE_Curriculum_DMS by via Command Prompt and <b>running the command</b> below:
 
 ``` git pull https://github.com/evancjx/SCSE_Curriculum_DMS.git master ```
 
@@ -36,8 +36,8 @@ Select only <b>Apache</b> and <b>MySQL</b>
 
 4. Hold Ctrl + F to search for 'DocumentRoot'
 
-5. Modify DocumentRoot to "[project_location]\SCSE_Curriculum_DMS\CorePHP"<br>
-Do the same for Directory "[project_location]\SCSE_Curriculum_DMS\CorePHP"<br>
+5. Modify <b>DocumentRoot</b> to "[project_location]\SCSE_Curriculum_DMS\CorePHP"<br>
+Do the same for <b>Directory</b> "[project_location]\SCSE_Curriculum_DMS\CorePHP"<br>
 Similar to:
 
 ```
@@ -53,7 +53,7 @@ Install Composer (A Dependency Manager for PHP)
 
 1. Download and install Composer Windows Installer https://getcomposer.org/Composer-Setup.exe
 
-2. Run Laravel installation by opening Command Prompt and running the command below:
+2. Run Laravel installation by via a Command Prompt and running the command below:
 
 ``` composer global require laravel/installer ```
 
@@ -95,7 +95,29 @@ Repeat steps 4 - 7.
 
 #### Import Data into MySQL Database
 
+I have SQL import files in the <b>_SQL</b> folder of each individual projects. 
+
+1. Click on to <b>Databases</b> on the top navigation menu
+
+2. Under Create database, enter <b>Database name</b>
+
+3. Select <b>utf8mb4_unicode_ci</b> for Database collation
+
+4. Click on <b>Create</b>, to create the database on the server (which might be your local machine 'localhost')
+
 [To be updated]
+
+#### Modify users' privileges
+
+1. Under <b>User accounts</b> tab, click the user name's row of <b>Edit privileges</b> button
+
+2. Un-check <b>Global privileges</b> and check <b>Data</b> checkbox
+
+3. Click on <b>Database</b> tab at the top, under <b>User accounts</b> tab.
+
+4. Select the database to associate to the user account from the list <b>Add privileges on the following database(s)</b>
+
+5. Click <b>Go</b> at the bottom right of the page.
 
 #### Configure Core-PHP to Database
 
